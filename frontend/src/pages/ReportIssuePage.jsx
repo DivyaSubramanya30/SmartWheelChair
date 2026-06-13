@@ -8,6 +8,8 @@ export default function ReportIssuePage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     placeName: location.state?.placeName || '',
+    reporterName: '',
+    reporterEmail: '',
     status: 'partial',
     ramp: false,
     elevator: false,
@@ -82,6 +84,36 @@ export default function ReportIssuePage() {
               value={form.placeName}
               onChange={(e) => handleChange('placeName', e.target.value)}
               placeholder="Enter place name..."
+              className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="reporterName" className="mb-1.5 block text-sm font-medium text-slate-700">
+              Your Name
+            </label>
+            <input
+              id="reporterName"
+              type="text"
+              value={form.reporterName}
+              onChange={(e) => handleChange('reporterName', e.target.value)}
+              placeholder="Enter your name..."
+              className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="reporterEmail" className="mb-1.5 block text-sm font-medium text-slate-700">
+              Your Email
+            </label>
+            <input
+              id="reporterEmail"
+              type="email"
+              value={form.reporterEmail}
+              onChange={(e) => handleChange('reporterEmail', e.target.value)}
+              placeholder="Enter your email..."
               className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
               required
             />

@@ -1,17 +1,19 @@
 package com.accessiblity.backend.controller;
 
-import com.accessiblity.backend.dto.PlaceDTO;
-import com.accessiblity.backend.service.AccessibilityScoreService;
-import com.accessiblity.backend.service.PlaceService;
-import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.accessiblity.backend.dto.PlaceDTO;
+import com.accessiblity.backend.service.AccessibilityScoreService;
+import com.accessiblity.backend.service.PlaceService;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Controller for accessibility score endpoints.
@@ -36,19 +38,13 @@ public class ScoreController {
         PlaceDTO placeDTO = placeService.getPlaceById(placeId);
 
         // Determine accessibility classification
-        String classification;
-        if (scoreService.isFullyAccessible(convertToEntity(placeDTO))) {
-            classification = "FULLY_ACCESSIBLE";
-        } else if (scoreService.isPartiallyAccessible(convertToEntity(placeDTO))) {
-            classification = "PARTIALLY_ACCESSIBLE";
-        } else {
-            classification = "NOT_ACCESSIBLE";
-        }
+        int score = scoreService.calculateScore(convertToEntity(placeDTO));
+        String classification = scoreService.calculateAccessibilityStatus(score).name();
 
         Map<String, Object> response = new HashMap<>();
         response.put("placeId", placeDTO.getId());
         response.put("placeName", placeDTO.getName());
-        response.put("score", placeDTO.getAccessibilityScore());
+        response.put("score", score);
         response.put("classification", classification);
         response.put("features", Map.of(
                 "hasRamp", placeDTO.getHasRamp(),
