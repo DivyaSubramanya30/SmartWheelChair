@@ -1,11 +1,26 @@
 import api from './api';
 
+const PLACE_TYPE_IMAGES = {
+  HOSPITAL: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&q=80',
+  RESTAURANT: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80',
+  SHOPPING_MALL: 'https://images.unsplash.com/photo-1591085686350-798c0f9faa7f?w=400&q=80',
+  HOTEL: 'https://images.unsplash.com/photo-1455587734955-081b22074882?w=400&q=80',
+  EDUCATIONAL_INSTITUTION: 'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&q=80',
+  TRANSPORTATION: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&q=80',
+  ENTERTAINMENT: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&q=80',
+  BANK: 'https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?w=400&q=80',
+  GOVERNMENT_OFFICE: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=400&q=80',
+  OTHER: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&q=80',
+};
+
 function transformPlace(dto) {
   const statusMap = {
     ACCESSIBLE: 'accessible',
     PARTIAL: 'partial',
     NOT_ACCESSIBLE: 'not_accessible',
   };
+
+  const placeType = dto.placeType || 'OTHER';
 
   return {
     id: dto.id,
@@ -15,16 +30,17 @@ function transformPlace(dto) {
     lng: dto.longitude,
     accessibilityScore: dto.accessibilityScore ?? 0,
     status: statusMap[dto.accessibilityStatus] || 'not_accessible',
+    placeType: placeType,
     features: {
       ramp: !!dto.hasRamp,
       elevator: !!dto.hasElevator,
       accessibleWashroom: !!dto.hasAccessibleToilet,
       parking: !!dto.hasAccessibleParking,
     },
-    category: dto.placeType || 'Other',
-    image: dto.imageUrl || 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop',
+    category: placeType,
+    image: dto.imageUrl || PLACE_TYPE_IMAGES[placeType] || PLACE_TYPE_IMAGES.OTHER,
     photos: dto.imageUrl ? [dto.imageUrl] : [],
-    reviews: [], // backend doesn't provide reviews yet
+    reviews: [],
   };
 }
 
